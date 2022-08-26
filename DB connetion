@@ -1,0 +1,89 @@
+package corejava;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.Scanner;
+
+public class DBConnection {
+	Scanner sc=new Scanner(System.in);
+	  public  DBConnection() throws Exception
+	{
+		  Class.forName("oracle.jdbc.driver.OracleDriver");
+		System.out.println("connected to   loaded   ");
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","oracel","sivasiva");
+		System.out.println(" Connected to    DB       ");
+		System.out.println("-------------------------------------------------------------------");
+		System.out.println("enter your choice : 1.(Insert) /2.(update) /3.(delete) / 4.(select) /5.(to see list) /.6(exit)    ");
+			int choice=sc.nextInt();
+		      switch(choice)
+		      {
+		       case 1:
+		              {
+			            PreparedStatement ps=con.prepareStatement("insert into  emp values(id.nextval,?,?,?)");
+			       //   ps.setString(1, 1);
+			            int i=ps.executeUpdate();
+			            System.out.println(i+" records inserted successfully");			
+		              }
+		            break;
+		       case 2:
+	              {
+	          		PreparedStatement ps=con.prepareStatement("update emp set empname=? where empid=?");
+		       //   ps.setString(1, 1);
+		       //   ps.setString(2, 1);
+		            int i=ps.executeUpdate();
+		            System.out.println(i+" records updated successfully");			
+	              }
+	            break;
+		       case 3:
+	              {
+		            PreparedStatement ps=con.prepareStatement("delete from emp where empid=?");
+		       //   ps.setString(1, 1);
+		            int i=ps.executeUpdate();
+		            System.out.println(i+" records delete successfully");			
+	              }
+	            break;
+		       case 4:
+	              {
+		            PreparedStatement ps=con.prepareStatement("select * from emp where empid=?");
+		       //   ps.setString(1, 1);
+		          ResultSet rs=ps.executeQuery();
+		            System.out.println(" records select successfully");	
+		            while(rs.next())
+		            {
+		            	String id=rs.getString(1);
+		            	String name=rs.getString(2);
+		            	System.out.print(id+"\n"+name);
+		            }
+	              }
+	            break;
+		       case 5:
+	              {
+	            	  PreparedStatement ps=con.prepareStatement("select * from emp where empid=?");
+	            	 ResultSet rs= ps.executeQuery();
+	            	 ResultSetMetaData rsmd=rs.getMetaData();
+	            	 int n=rsmd.getColumnCount();
+	            	for( int i=1;i<=n;++i)
+	            	{
+	            		System.out.print(rsmd.getColumnName(i)+"      ");
+	            	}
+	            	while(rs.next())
+	            	{
+	            		for(int j=1;j<=n;++j)
+	            		{
+	            			System.out.print(rs.getString(j));
+	            		}
+	            		System.out.println();
+	            	}
+	            	
+	            	  
+		             }
+		break;
+		    }
+		
+	}
+
+	
+}
